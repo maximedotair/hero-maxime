@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
+import Link from "next/link";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -60,30 +61,37 @@ const AuthPage = () => {
   if (!isClient) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-8 bg-white shadow-md rounded-md">
-        <h2 className="mb-4 text-2xl font-bold">{isLoggedIn ? `Welcome` : isLogin ? "Se connecter" : "S’inscrire"}</h2>
-        {!isLoggedIn ? (
-          <>
-            <input type="text" placeholder="Username" className="w-full px-4 py-2 mb-4 border border-gray-300 rounded" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" className="w-full px-4 py-2 mb-4 border border-gray-300 rounded" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleAuth} className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded">
-              {isLogin ? "Se connecter" : "S’inscrire"}
-            </button>
-          </>
-        ) : (
-          <button onClick={handleLogout} className="w-full px-4 py-2 font-bold text-white bg-red-500 rounded">
-            Se déconnecter
-          </button>
-        )}
-        <p className="mt-4 text-sm text-center">
-          {isLogin ? "Pas de compte ?" : "Déjà un compte ?"}{" "}
-          <button onClick={() => setIsLogin(!isLogin)} className="text-blue-500">
-            {isLogin ? "S’inscrire" : "Se connecter"}
-          </button>
-        </p>
+    <>
+      <div className="absolute top-0 left-0 p-4">
+        <Link href="/" className="text-blue-500 hover:underline">
+          Retour à l'accueil
+        </Link>
       </div>
-    </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="p-8 bg-white shadow-md rounded-md">
+          <h2 className="mb-4 text-2xl font-bold">{isLoggedIn ? `Welcome` : isLogin ? "Se connecter" : "S’inscrire"}</h2>
+          {!isLoggedIn ? (
+            <>
+              <input type="text" placeholder="Username" className="w-full px-4 py-2 mb-4 border border-gray-300 rounded" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <input type="password" placeholder="Password" className="w-full px-4 py-2 mb-4 border border-gray-300 rounded" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button onClick={handleAuth} className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded">
+                {isLogin ? "Se connecter" : "S’inscrire"}
+              </button>
+            </>
+          ) : (
+            <button onClick={handleLogout} className="w-full px-4 py-2 font-bold text-white bg-red-500 rounded">
+              Se déconnecter
+            </button>
+          )}
+          <p className="mt-4 text-sm text-center">
+            {isLogin ? "Pas de compte ?" : "Déjà un compte ?"}{" "}
+            <button onClick={() => setIsLogin(!isLogin)} className="text-blue-500">
+              {isLogin ? "S’inscrire" : "Se connecter"}
+            </button>
+          </p>
+        </div>
+      </div>
+    </>
   );
 };
 

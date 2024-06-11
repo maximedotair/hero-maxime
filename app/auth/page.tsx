@@ -1,29 +1,33 @@
 "use client";
-
 import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie"; // Ensure you have js-cookie installed
+import Cookies from "js-cookie";
 import alertify from "alertifyjs";
-import "alertifyjs/build/css/alertify.css"; // Import Alertify CSS
+import "alertifyjs/build/css/alertify.css";
 
 const AuthPage = () => {
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isClient, setIsClient] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const searchParams = useSearchParams();
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isClient, setIsClient] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsClient(true); // Confirm the component is rendered on the client-side
+    setIsClient(true);
     const sessionCookie = Cookies.get("session");
     if (sessionCookie) {
       const sessionData = JSON.parse(sessionCookie);
       setIsLoggedIn(true);
-      setUsername(sessionData.username); // Convert string to JSON object first
+      setUsername(sessionData.username);
     }
-  }, []);
+    const signupParam = searchParams?.get("signup");
+    if (signupParam) {
+      setIsLogin(false);
+    }
+  }, [searchParams]);
 
   const handleAuth = async () => {
     try {
@@ -33,7 +37,9 @@ const AuthPage = () => {
         setIsLoggedIn(true);
         alertify.success("Connection réussie !");
       } else {
-        await axios.post("/api/auth/signup", { username, password });
+        const response = await axios.post("/api/auth/signup", { username, password });
+        Cookies.set("session", JSON.stringify({ username }), { path: "/" });
+        setIsLoggedIn(true);
         alertify.success("Inscription réussie !");
       }
       router.push("/");
@@ -48,7 +54,7 @@ const AuthPage = () => {
     setIsLoggedIn(false);
     setUsername("");
     router.push("/");
-    alertify.success("Connexion réussie !");
+    alertify.success("Déconnexion réussie !");
   };
 
   if (!isClient) return null;

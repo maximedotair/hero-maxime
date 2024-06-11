@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
 const Home = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
     const sessionCookie = Cookies.get("session");
@@ -42,7 +42,7 @@ const Home = () => {
         ) : (
           <>
             <h2 className="text-4xl font-bold">Hero</h2>
-            <Link href="/auth">
+            <Link href="/auth?signup=true">
               <button className="px-6 py-3 mt-4 font-bold text-white bg-green-500 rounded">Commencer</button>
             </Link>
           </>
